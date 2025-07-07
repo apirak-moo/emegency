@@ -27,6 +27,7 @@ services:
   #     SPRING_DATASOURCE_PASSWORD: emegency_password
   #   ports:
   #     - "8080:8080"
+  # ไม่ต้องเปิดใช้งาน
 
 volumes:
   pgdata_emegency:
