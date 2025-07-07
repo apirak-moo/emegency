@@ -59,4 +59,11 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    public boolean login(UserRequest request) {
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + request.email()));
+        
+        return passwordEncoder.matches(request.password(), user.getPassword());
+    }
+
 }

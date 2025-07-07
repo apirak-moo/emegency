@@ -121,6 +121,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "ไม่พบผู้ใช้"),
         @ApiResponse(responseCode = "500", description = "เกิดข้อผิดพลาดภายในระบบ")
     })
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
         @Parameter(description = "UUID ของผู้ใช้ที่ต้องการลบ", required = true)
@@ -128,6 +129,27 @@ public class UserController {
     ) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    @Operation(
+        summary = "เข้าสู่ระบบ",
+        description = "Endpoint สำหรับเข้าสู่ระบบด้วยอีเมลและรหัสผ่าน"
+    )    
+    public ResponseEntity<?> login(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "ข้อมูลสำหรับเข้าสู่ระบบ",
+            required = true,
+            content = @Content(schema = @Schema(implementation = UserRequest.class))
+        )
+        @Valid @RequestBody UserRequest request
+    ) {
+        boolean isAuthenticated = userService.login(request);
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid credentials");
+        }
     }
 
 }
