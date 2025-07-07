@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: emegency_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: emegency_store
+      POSTGRES_USER: emegency_admin
+      POSTGRES_PASSWORD: emegency_password
+    volumes:
+      - pgdata_emegency:/var/lib/postgresql/data
+    ports:
+      - "15432:5432"
+  
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: emegency_backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/emegency_store
+      SPRING_DATASOURCE_USERNAME: emegency_admin
+      SPRING_DATASOURCE_PASSWORD: emegency_password
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata_emegency:
